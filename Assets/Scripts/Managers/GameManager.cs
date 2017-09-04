@@ -16,7 +16,7 @@ namespace Assets.Scripts.Managers
 	public class GameManager
 		: MonoBehaviour
 	{
-		public const int AD_SHOW_AMOUNT = 3;
+		public const int AD_SHOW_AMOUNT = 5;
 
 		private int adCounter;
 		private static readonly RNG rng = new RNG();
@@ -48,12 +48,12 @@ namespace Assets.Scripts.Managers
 		}
 
 		[SerializeField]
-		private bool _developmentMode;
-		public bool DevelopmentMode
+		private bool _localMode;
+		public bool LocalMode
 		{
 			get
 			{
-				return _developmentMode;
+				return _localMode;
 			}
 		}
 

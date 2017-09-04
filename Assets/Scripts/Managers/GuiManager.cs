@@ -14,7 +14,7 @@ namespace Assets.Scripts.Managers
 	public class GuiManager
 		: MonoBehaviour
 	{
-		private const float METER_DELTA = 0.1f;
+		private const float METER_DELTA = 0.2f;
 
 		[SerializeField]
 		private Text coinsText;
@@ -187,17 +187,17 @@ namespace Assets.Scripts.Managers
 			switch (lives)
 			{
 				case 0:
-					FlashDisableHeart(leftHeart, blink ? 5 : 0);
+					FlashImage(leftHeart, blink ? 5 : 0, false);
 					middleHeart.enabled = rightHeart.enabled = false;
 					break;
 				case 1:
 					leftHeart.enabled = true;
-					FlashDisableHeart(middleHeart, blink ? 5 : 0);
+					FlashImage(middleHeart, blink ? 5 : 0, false);
 					rightHeart.enabled = false;
 					break;
 				case 2:
 					leftHeart.enabled = middleHeart.enabled = true;
-					FlashDisableHeart(rightHeart, blink ? 5 : 0);
+					FlashImage(rightHeart, blink ? 5 : 0, false);
 					break;
 				case 3:
 					leftHeart.enabled = middleHeart.enabled = rightHeart.enabled = true;
@@ -207,13 +207,19 @@ namespace Assets.Scripts.Managers
 			}
 		}
 
-		private void FlashDisableHeart(Image heart, int amount)
+		private void FlashImage(Image image, int amount, bool endState)
 		{
+			if (amount < 1)
+			{
+				image.enabled = endState;
+				return;
+			}
+
 			StartCoroutine(CoroutineHelper.RepeatFor(
 						0.25f,
 						amount,
-						() => heart.enabled = !heart.enabled,
-						() => heart.enabled = false));
+						() => image.enabled = !image.enabled,
+						() => image.enabled = endState));
 		}
 
 		public void UpdateCoins(int coins)
@@ -221,9 +227,9 @@ namespace Assets.Scripts.Managers
 			coinsText.text = String.Format("× {0}", coins.ToString().PadLeft(3, '0'));
 		}
 
-		public void DisplayStartSignal(int? count)
+		public void DisplayStartSignal(int count)
 		{
-			if (count == null)
+			if (count < 0)
 			{
 				countDownText.enabled = false;
 				return;
@@ -235,6 +241,12 @@ namespace Assets.Scripts.Managers
 			if (count > 0)
 			{
 				countDownText.text = String.Format("{0}..", count);
+				if (count == 0)
+				{
+					StartCoroutine(CoroutineHelper.Delay(
+						0.25f,
+						() => GameManager.Instance.Player.GetComponent<Animator>().SetFloat("Speed", 10)));
+				}
 			}
 			else
 			{

@@ -23,7 +23,7 @@ namespace Assets.Scripts.Managers
 		{
 			get
 			{
-				return GameManager.Instance.DevelopmentMode ? LOCAL_ENDPOINT : PRODUCTION_ENDPOINT;
+				return GameManager.Instance.LocalMode ? LOCAL_ENDPOINT : PRODUCTION_ENDPOINT;
 			}
 		}
 

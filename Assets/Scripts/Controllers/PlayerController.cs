@@ -51,15 +51,15 @@ namespace Assets.Scripts.Controllers
 				StartCoroutine(CoroutineHelper.For(
 				1,
 				() => 3,
-				i => i >= 0,
+				i => i >= -1,
 				(ref int i) => i--,
 				i =>
 				{
 					GameManager.Instance.GuiManager.DisplayStartSignal(i);
-					Frozen = i != 0;
-				},
-				() => GameManager.Instance.GuiManager.DisplayStartSignal(null)));
+					Frozen = i >= 0;
+				}));
 			}));
+			//StartCoroutine(CoroutineHelper.Delay(1f, () => animator.SetFloat("Speed", 0.5f)));
 
 			if (GameManager.Instance.CurrentGame.GameType == GameType.MultiplayerCreate)
 			{
@@ -470,7 +470,7 @@ namespace Assets.Scripts.Controllers
 			}
 
 			CurrentSpeed = Mathf.MoveTowards(CurrentSpeed, maxSpeed, acceleration * Time.deltaTime);
-			animator.SetFloat("Speed", CurrentSpeed);
+			animator.SetFloat("Speed", CurrentSpeed / maxSpeed);
 			transform.position += Orientation.GetDirectionVector3() * CurrentSpeed * Time.deltaTime;
 		}
 
